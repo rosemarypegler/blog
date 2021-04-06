@@ -2,166 +2,166 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://example.com/posts/2014/09/creating-a-new-theme/</loc>
+    <loc>/posts/2014/09/creating-a-new-theme/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://example.com/fr/posts/2014/09/cr%C3%A9ation-dun-nouveau-th%C3%A8me/"
+                href="/fr/posts/2014/09/cr%C3%A9ation-dun-nouveau-th%C3%A8me/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://example.com/posts/2014/09/creating-a-new-theme/"
+                href="/posts/2014/09/creating-a-new-theme/"
                 />
   </url><url>
-    <loc>http://example.com/posts/2014/03/migrate-to-hugo-from-jekyll/</loc>
+    <loc>/posts/2014/03/migrate-to-hugo-from-jekyll/</loc>
     <lastmod>2014-03-10T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://example.com/fr/posts/2014/03/migrer-vers-hugo-depuis-jekyll/"
+                href="/fr/posts/2014/03/migrer-vers-hugo-depuis-jekyll/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://example.com/posts/2014/03/migrate-to-hugo-from-jekyll/"
+                href="/posts/2014/03/migrate-to-hugo-from-jekyll/"
                 />
   </url><url>
-    <loc>http://example.com/categories/</loc>
+    <loc>/categories/</loc>
     <lastmod>2020-12-01T21:13:14-05:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://example.com/fr/categories/"
+                href="/fr/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://example.com/categories/"
+                href="/categories/"
                 />
   </url><url>
-    <loc>http://example.com/posts/2020/12/hello-r-markdown/</loc>
+    <loc>/posts/2020/12/hello-r-markdown/</loc>
     <lastmod>2020-12-01T21:13:14-05:00</lastmod>
   </url><url>
-    <loc>http://example.com/tags/plot/</loc>
+    <loc>/tags/plot/</loc>
     <lastmod>2020-12-01T21:13:14-05:00</lastmod>
   </url><url>
-    <loc>http://example.com/posts/</loc>
+    <loc>/posts/</loc>
     <lastmod>2020-12-01T21:13:14-05:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://example.com/fr/posts/"
+                href="/fr/posts/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://example.com/posts/"
+                href="/posts/"
                 />
   </url><url>
-    <loc>http://example.com/categories/r/</loc>
+    <loc>/categories/r/</loc>
     <lastmod>2020-12-01T21:13:14-05:00</lastmod>
   </url><url>
-    <loc>http://example.com/tags/r-markdown/</loc>
+    <loc>/tags/r-markdown/</loc>
     <lastmod>2020-12-01T21:13:14-05:00</lastmod>
   </url><url>
-    <loc>http://example.com/tags/regression/</loc>
+    <loc>/tags/regression/</loc>
     <lastmod>2020-12-01T21:13:14-05:00</lastmod>
   </url><url>
-    <loc>http://example.com/</loc>
+    <loc>/</loc>
     <lastmod>2020-12-01T21:13:14-05:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://example.com/fr/"
+                href="/fr/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://example.com/"
+                href="/"
                 />
   </url><url>
-    <loc>http://example.com/tags/</loc>
+    <loc>/tags/</loc>
     <lastmod>2020-12-01T21:13:14-05:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://example.com/fr/tags/"
+                href="/fr/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://example.com/tags/"
+                href="/tags/"
                 />
   </url><url>
-    <loc>http://example.com/series/hugo-101/</loc>
+    <loc>/series/hugo-101/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.com/series/</loc>
+    <loc>/series/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://example.com/fr/series/"
+                href="/fr/series/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://example.com/series/"
+                href="/series/"
                 />
   </url><url>
-    <loc>http://example.com/about/</loc>
+    <loc>/about/</loc>
     <lastmod>2014-04-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.com/posts/2014/04/hugo-template-primer/</loc>
+    <loc>/posts/2014/04/hugo-template-primer/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://example.com/fr/posts/2014/04/introduction-aux-mod%C3%A8les-hugo/"
+                href="/fr/posts/2014/04/introduction-aux-mod%C3%A8les-hugo/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://example.com/posts/2014/04/hugo-template-primer/"
+                href="/posts/2014/04/hugo-template-primer/"
                 />
   </url><url>
-    <loc>http://example.com/categories/development/</loc>
+    <loc>/categories/development/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.com/tags/development/</loc>
+    <loc>/tags/development/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.com/posts/2014/04/getting-started-with-hugo/</loc>
+    <loc>/posts/2014/04/getting-started-with-hugo/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="http://example.com/fr/posts/2014/04/d%C3%A9buter-avec-hugo/"
+                href="/fr/posts/2014/04/d%C3%A9buter-avec-hugo/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://example.com/posts/2014/04/getting-started-with-hugo/"
+                href="/posts/2014/04/getting-started-with-hugo/"
                 />
   </url><url>
-    <loc>http://example.com/tags/go/</loc>
+    <loc>/tags/go/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.com/tags/golang/</loc>
+    <loc>/tags/golang/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.com/categories/golang/</loc>
+    <loc>/categories/golang/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.com/tags/hugo/</loc>
+    <loc>/tags/hugo/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.com/tags/templates/</loc>
+    <loc>/tags/templates/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.com/tags/themes/</loc>
+    <loc>/tags/themes/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url>
 </urlset>

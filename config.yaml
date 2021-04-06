@@ -1,4 +1,4 @@
-baseURL: http://example.com
+baseURL: /
 title: Rose Pegler
 languageCode: en-us
 theme: hugo-theme-hello-friend-ng
