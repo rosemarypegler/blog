@@ -2,128 +2,128 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://example.com/fr/categories/</loc>
+    <loc>http://example.com/fr/categories/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/categories/"
+                href="http://example.com/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://example.com/fr/categories/"
+                href="http://example.com/fr/categories/"
                 />
   </url><url>
-    <loc>https://example.com/fr/posts/2014/09/cr%C3%A9ation-dun-nouveau-th%C3%A8me/</loc>
+    <loc>http://example.com/fr/posts/2014/09/cr%C3%A9ation-dun-nouveau-th%C3%A8me/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/posts/2014/09/creating-a-new-theme/"
+                href="http://example.com/posts/2014/09/creating-a-new-theme/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://example.com/fr/posts/2014/09/cr%C3%A9ation-dun-nouveau-th%C3%A8me/"
+                href="http://example.com/fr/posts/2014/09/cr%C3%A9ation-dun-nouveau-th%C3%A8me/"
                 />
   </url><url>
-    <loc>https://example.com/fr/categories/hugo/</loc>
+    <loc>http://example.com/fr/categories/hugo/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://example.com/fr/posts/</loc>
-    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://example.com/posts/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="fr"
-                href="https://example.com/fr/posts/"
-                />
-  </url><url>
-    <loc>https://example.com/fr/</loc>
+    <loc>http://example.com/fr/posts/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/"
+                href="http://example.com/posts/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://example.com/fr/"
+                href="http://example.com/fr/posts/"
                 />
   </url><url>
-    <loc>https://example.com/fr/posts/2014/04/d%C3%A9buter-avec-hugo/</loc>
+    <loc>http://example.com/fr/</loc>
+    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://example.com/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://example.com/fr/"
+                />
+  </url><url>
+    <loc>http://example.com/fr/posts/2014/04/d%C3%A9buter-avec-hugo/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/posts/2014/04/getting-started-with-hugo/"
+                href="http://example.com/posts/2014/04/getting-started-with-hugo/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://example.com/fr/posts/2014/04/d%C3%A9buter-avec-hugo/"
+                href="http://example.com/fr/posts/2014/04/d%C3%A9buter-avec-hugo/"
                 />
   </url><url>
-    <loc>https://example.com/fr/categories/go/</loc>
+    <loc>http://example.com/fr/categories/go/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://example.com/fr/posts/2014/04/introduction-aux-mod%C3%A8les-hugo/</loc>
+    <loc>http://example.com/fr/posts/2014/04/introduction-aux-mod%C3%A8les-hugo/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/posts/2014/04/hugo-template-primer/"
+                href="http://example.com/posts/2014/04/hugo-template-primer/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://example.com/fr/posts/2014/04/introduction-aux-mod%C3%A8les-hugo/"
+                href="http://example.com/fr/posts/2014/04/introduction-aux-mod%C3%A8les-hugo/"
                 />
   </url><url>
-    <loc>https://example.com/fr/categories/jekyll/</loc>
+    <loc>http://example.com/fr/categories/jekyll/</loc>
     <lastmod>2014-03-10T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://example.com/fr/posts/2014/03/migrer-vers-hugo-depuis-jekyll/</loc>
+    <loc>http://example.com/fr/posts/2014/03/migrer-vers-hugo-depuis-jekyll/</loc>
     <lastmod>2014-03-10T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/posts/2014/03/migrate-to-hugo-from-jekyll/"
+                href="http://example.com/posts/2014/03/migrate-to-hugo-from-jekyll/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://example.com/fr/posts/2014/03/migrer-vers-hugo-depuis-jekyll/"
+                href="http://example.com/fr/posts/2014/03/migrer-vers-hugo-depuis-jekyll/"
                 />
   </url><url>
-    <loc>https://example.com/fr/series/</loc>
+    <loc>http://example.com/fr/series/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/series/"
+                href="http://example.com/series/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://example.com/fr/series/"
+                href="http://example.com/fr/series/"
                 />
   </url><url>
-    <loc>https://example.com/fr/tags/</loc>
+    <loc>http://example.com/fr/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/tags/"
+                href="http://example.com/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://example.com/fr/tags/"
+                href="http://example.com/fr/tags/"
                 />
   </url>
 </urlset>
