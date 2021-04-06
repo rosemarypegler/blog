@@ -2,128 +2,128 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>/fr/categories/</loc>
+    <loc>https://rosepegler.netlify.app/fr/categories/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/categories/"
+                href="https://rosepegler.netlify.app/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="/fr/categories/"
+                href="https://rosepegler.netlify.app/fr/categories/"
                 />
   </url><url>
-    <loc>/fr/posts/2014/09/cr%C3%A9ation-dun-nouveau-th%C3%A8me/</loc>
+    <loc>https://rosepegler.netlify.app/fr/posts/2014/09/cr%C3%A9ation-dun-nouveau-th%C3%A8me/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/posts/2014/09/creating-a-new-theme/"
+                href="https://rosepegler.netlify.app/posts/2014/09/creating-a-new-theme/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="/fr/posts/2014/09/cr%C3%A9ation-dun-nouveau-th%C3%A8me/"
+                href="https://rosepegler.netlify.app/fr/posts/2014/09/cr%C3%A9ation-dun-nouveau-th%C3%A8me/"
                 />
   </url><url>
-    <loc>/fr/categories/hugo/</loc>
+    <loc>https://rosepegler.netlify.app/fr/categories/hugo/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/fr/posts/</loc>
-    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="/posts/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="fr"
-                href="/fr/posts/"
-                />
-  </url><url>
-    <loc>/fr/</loc>
+    <loc>https://rosepegler.netlify.app/fr/posts/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/"
+                href="https://rosepegler.netlify.app/posts/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="/fr/"
+                href="https://rosepegler.netlify.app/fr/posts/"
                 />
   </url><url>
-    <loc>/fr/posts/2014/04/d%C3%A9buter-avec-hugo/</loc>
+    <loc>https://rosepegler.netlify.app/fr/</loc>
+    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://rosepegler.netlify.app/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="https://rosepegler.netlify.app/fr/"
+                />
+  </url><url>
+    <loc>https://rosepegler.netlify.app/fr/posts/2014/04/d%C3%A9buter-avec-hugo/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/posts/2014/04/getting-started-with-hugo/"
+                href="https://rosepegler.netlify.app/posts/2014/04/getting-started-with-hugo/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="/fr/posts/2014/04/d%C3%A9buter-avec-hugo/"
+                href="https://rosepegler.netlify.app/fr/posts/2014/04/d%C3%A9buter-avec-hugo/"
                 />
   </url><url>
-    <loc>/fr/categories/go/</loc>
+    <loc>https://rosepegler.netlify.app/fr/categories/go/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/fr/posts/2014/04/introduction-aux-mod%C3%A8les-hugo/</loc>
+    <loc>https://rosepegler.netlify.app/fr/posts/2014/04/introduction-aux-mod%C3%A8les-hugo/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/posts/2014/04/hugo-template-primer/"
+                href="https://rosepegler.netlify.app/posts/2014/04/hugo-template-primer/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="/fr/posts/2014/04/introduction-aux-mod%C3%A8les-hugo/"
+                href="https://rosepegler.netlify.app/fr/posts/2014/04/introduction-aux-mod%C3%A8les-hugo/"
                 />
   </url><url>
-    <loc>/fr/categories/jekyll/</loc>
+    <loc>https://rosepegler.netlify.app/fr/categories/jekyll/</loc>
     <lastmod>2014-03-10T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/fr/posts/2014/03/migrer-vers-hugo-depuis-jekyll/</loc>
+    <loc>https://rosepegler.netlify.app/fr/posts/2014/03/migrer-vers-hugo-depuis-jekyll/</loc>
     <lastmod>2014-03-10T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/posts/2014/03/migrate-to-hugo-from-jekyll/"
+                href="https://rosepegler.netlify.app/posts/2014/03/migrate-to-hugo-from-jekyll/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="/fr/posts/2014/03/migrer-vers-hugo-depuis-jekyll/"
+                href="https://rosepegler.netlify.app/fr/posts/2014/03/migrer-vers-hugo-depuis-jekyll/"
                 />
   </url><url>
-    <loc>/fr/series/</loc>
+    <loc>https://rosepegler.netlify.app/fr/series/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/series/"
+                href="https://rosepegler.netlify.app/series/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="/fr/series/"
+                href="https://rosepegler.netlify.app/fr/series/"
                 />
   </url><url>
-    <loc>/fr/tags/</loc>
+    <loc>https://rosepegler.netlify.app/fr/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/tags/"
+                href="https://rosepegler.netlify.app/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="/fr/tags/"
+                href="https://rosepegler.netlify.app/fr/tags/"
                 />
   </url>
 </urlset>
