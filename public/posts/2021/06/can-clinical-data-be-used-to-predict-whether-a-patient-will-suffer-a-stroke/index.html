@@ -26,7 +26,7 @@ Data ExplorationThere’s an obvious difference between those who have suffered
 
 
 
-<link rel="stylesheet" href="https://rosepegler.netlify.app/main.b19e000053185e5b362161ba9fa69c23a141d72b4f7ebbf75561ec5a08f0b293.css">
+<link rel="stylesheet" href="https://rosepegler.netlify.app/main.7ebe1132c947d311e69fb668bae265e4ca8f22173fd3cdae4f915634b26e2dda.css">
 
 
 
@@ -46,7 +46,7 @@ Data ExplorationThere’s an obvious difference between those who have suffered
 <meta itemprop="description" content="This exercise uses the tidymodels package. I’ve watched a number of Julia Silge’s Tidy Tuesday videos but haven’t yet tried to conduct any machine learning using this package. This is my first time trying, and what better way to start than by looking at medical data. The data set can be found here.
 Data ExplorationThere’s an obvious difference between those who have suffered from heart disease or hypertension and those who haven’t."><meta itemprop="datePublished" content="2021-06-22T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2021-06-22T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="868">
+<meta itemprop="wordCount" content="780">
 <meta itemprop="keywords" content="random forest,machine learning,tidymodels,R," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Can Clinical Data be used to Predict Whether a Patient Will Suffer a Stroke?"/>
@@ -136,7 +136,7 @@ Data ExplorationThere’s an obvious difference between those who have suffered
           <circle cx="12" cy="12" r="10"></circle>
           <polyline points="12 6 12 12 16 14"></polyline>
         </svg>
-        5 minutes
+        4 minutes
 
         
       </p>
@@ -165,19 +165,6 @@ Data ExplorationThere’s an obvious difference between those who have suffered
 <p>I can also see some pretty interesting findings. Those who have been married, are self-employed, or have smoked seem to suffer more than those who haven’t. It also appears that if you work with children, or are lucky enough to not work at all, you could be less likely to suffer from a stroke.</p>
 <p><img src="https://rosepegler.netlify.app/posts/2021/06/can-clinical-data-be-used-to-predict-whether-a-patient-will-suffer-a-stroke/index_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Now when I inspect the numerical variables, I can see that those who have had a stroke tend to be older. This makes sense, right? I personally don’t know of any young people that have had one. The glucose level of a patient could contribute, but BMI doesn’t seem to be playing a huge role.</p>
-<pre class="r"><code>long_num_data &lt;- data %&gt;%
-  select(Stroke, Age, `Average Glucose Level`, BMI) %&gt;%
-  pivot_longer(Age:BMI)
-
-long_num_data %&gt;%
-  ggplot(aes(x = value, fill = Stroke)) +
-  geom_boxplot(alpha = 0.7) +
-  facet_wrap(~name, nrow = 3, scales = &quot;free&quot;) +
-  scale_fill_viridis_d(direction = -1, end = 0.7) +
-  theme(legend.position = &quot;bottom&quot;,
-        plot.title = element_text(face = &quot;bold&quot;)) +
-  labs(fill = &quot;Did the patient have a Stroke?&quot;, x = &quot;Value&quot;, y = &quot;Density&quot;,
-       title = &quot;Distribution of People Who Suffered a Stroke for Each \nNumerical Variable&quot;) </code></pre>
 <p><img src="https://rosepegler.netlify.app/posts/2021/06/can-clinical-data-be-used-to-predict-whether-a-patient-will-suffer-a-stroke/index_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="data-preparation" class="section level1">
@@ -207,6 +194,14 @@ folds &lt;- vfold_cv(training, strata = Stroke)</code></pre>
 <li>Impute null values using a linear regression model</li>
 </ul>
 <p>I specify that I want to use a random forest model, and I want to tune the parameters to try and get the best model possible. The original kaggle task found <a href="https://www.kaggle.com/fedesoriano/stroke-prediction-dataset/tasks?taskId=3281">here</a> requires a high F1 score due to the imbalanced data, so I shall pick the model based on this metric.</p>
+<pre><code>## # A tibble: 5 x 8
+##    mtry min_n .metric .estimator  mean     n std_err .config              
+##   &lt;int&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;                
+## 1     5    14 f_meas  binary     0.826    10 0.00666 Preprocessor1_Model01
+## 2     3    10 f_meas  binary     0.826    10 0.00624 Preprocessor1_Model19
+## 3     5     8 f_meas  binary     0.826    10 0.00603 Preprocessor1_Model03
+## 4     9    24 f_meas  binary     0.825    10 0.00581 Preprocessor1_Model07
+## 5     6     4 f_meas  binary     0.825    10 0.00617 Preprocessor1_Model05</code></pre>
 <pre class="r"><code>recipe &lt;- training %&gt;%
   recipe(Stroke ~.) %&gt;%
   step_center(all_numeric_predictors()) %&gt;%
@@ -230,33 +225,25 @@ tune_res &lt;- tune_grid(
   resamples = folds,
   grid = 20,
   metrics = metric_set(accuracy, sens, spec, f_meas)
-)</code></pre>
-<pre><code>## i Creating pre-processing data to finalize unknown parameter: mtry</code></pre>
-<pre><code>## Warning: package &#39;vctrs&#39; was built under R version 4.0.5</code></pre>
-<pre class="r"><code>show_best(tune_res, metric = &quot;f_meas&quot;)</code></pre>
-<pre><code>## # A tibble: 5 x 8
-##    mtry min_n .metric .estimator  mean     n std_err .config              
-##   &lt;int&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;                
-## 1     5    14 f_meas  binary     0.826    10 0.00666 Preprocessor1_Model01
-## 2     3    10 f_meas  binary     0.826    10 0.00624 Preprocessor1_Model19
-## 3     5     8 f_meas  binary     0.826    10 0.00603 Preprocessor1_Model03
-## 4     9    24 f_meas  binary     0.825    10 0.00581 Preprocessor1_Model07
-## 5     6     4 f_meas  binary     0.825    10 0.00617 Preprocessor1_Model05</code></pre>
+)
+
+show_best(tune_res, metric = &quot;f_meas&quot;)</code></pre>
 <p>The model works quite well, it’s over 70% accurate.</p>
 <pre class="r"><code>best_tune &lt;- select_best(tune_res, metric = &#39;f_meas&#39;)
 
 final &lt;- workflow %&gt;%
   finalize_workflow(best_tune) %&gt;%
   last_fit(split, metrics = metric_set(accuracy, sens, spec, f_meas))
+## Warning: package &#39;vctrs&#39; was built under R version 4.0.5
 
-collect_metrics(final)</code></pre>
-<pre><code>## # A tibble: 4 x 4
+collect_metrics(final)
+## # A tibble: 4 x 4
 ##   .metric  .estimator .estimate .config             
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;               
-## 1 accuracy binary         0.714 Preprocessor1_Model1
-## 2 sens     binary         0.711 Preprocessor1_Model1
+## 1 accuracy binary         0.715 Preprocessor1_Model1
+## 2 sens     binary         0.713 Preprocessor1_Model1
 ## 3 spec     binary         0.764 Preprocessor1_Model1
-## 4 f_meas   binary         0.826 Preprocessor1_Model1</code></pre>
+## 4 f_meas   binary         0.827 Preprocessor1_Model1</code></pre>
 </div>
 <div id="important-variables" class="section level1">
 <h1>Important Variables</h1>
@@ -274,10 +261,11 @@ workflow &lt;- workflow() %&gt;%
 
 final &lt;- last_fit(workflow, split, metrics = metric_set(accuracy, roc_auc, f_meas))
 
-plot &lt;- final %&gt;%
+final %&gt;%
   pluck(&quot;.workflow&quot;, 1) %&gt;%   
   pull_workflow_fit() %&gt;% 
   vip(num_features = 20, aesthetics = list(col = &quot;navyblue&quot;, fill = &quot;navyblue&quot;))</code></pre>
+<p><img src="https://rosepegler.netlify.app/posts/2021/06/can-clinical-data-be-used-to-predict-whether-a-patient-will-suffer-a-stroke/index_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 
       </div>
@@ -315,7 +303,7 @@ plot &lt;- final %&gt;%
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
         </svg>
-        868 Words
+        780 Words
       </p>
 
       <p>

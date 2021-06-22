@@ -1,0 +1,131 @@
+---
+title: Can Clinical Data be used to Predict Whether a Patient Will Suffer a Stroke?
+author: Rose Pegler
+date: '2021-06-22'
+slug: can-clinical-data-be-used-to-predict-whether-a-patient-will-suffer-a-stroke
+categories:
+- Blog
+- R
+tags:
+- random forest
+- machine learning
+- tidymodels
+- R
+toc: no
+images: ~
+---
+
+
+<div id="TOC">
+
+</div>
+
+<p>This exercise uses the <code>tidymodels</code> package. I’ve watched a number of Julia Silge’s Tidy Tuesday videos but haven’t yet tried to conduct any machine learning using this package. This is my first time trying, and what better way to start than by looking at medical data. The data set can be found <a href="https://www.kaggle.com/fedesoriano/stroke-prediction-dataset">here</a>.</p>
+<div id="data-exploration" class="section level1">
+<h1>Data Exploration</h1>
+<p>There’s an obvious difference between those who have suffered from heart disease or hypertension and those who haven’t. It makes sense that those who have had health issues are more likely to experience other issues down the line.</p>
+<p>I can also see some pretty interesting findings. Those who have been married, are self-employed, or have smoked seem to suffer more than those who haven’t. It also appears that if you work with children, or are lucky enough to not work at all, you could be less likely to suffer from a stroke.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now when I inspect the numerical variables, I can see that those who have had a stroke tend to be older. This makes sense, right? I personally don’t know of any young people that have had one. The glucose level of a patient could contribute, but BMI doesn’t seem to be playing a huge role.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="data-preparation" class="section level1">
+<h1>Data Preparation</h1>
+<p>In the previous plot, there were clearly a large number of outliers. I don’t want to remove them for glucose level as they wouldn’t be considered outliers for patients who had a stroke. However, for BMI, there are outliers for both types of patient.</p>
+<pre class="r"><code>outlier_min &lt;- min(boxplot.stats(data$BMI)$out)
+
+data &lt;- data %&gt;% 
+  filter(BMI &lt; outlier_min | is.na(BMI)) %&gt;%
+  select(-ID)</code></pre>
+</div>
+<div id="modelling" class="section level1">
+<h1>Modelling</h1>
+<p>I am going to build a random forest model using the <code>tidymodels</code>, <code>themis</code> and <code>vip</code> packages.</p>
+<p>I begin by splitting the data into a training and test set, then creating folds from the training data, stratified by the <code>Stroke</code> variable.</p>
+<pre class="r"><code>set.seed(1)
+split &lt;- initial_split(data, strata = Stroke)
+training &lt;- training(split)
+testing &lt;- testing(split)
+
+set.seed(1)
+folds &lt;- vfold_cv(training, strata = Stroke)</code></pre>
+<p>The next step is to create my recipe. This requires a number of processing steps:</p>
+<ul>
+<li>Standardise the data</li>
+<li>The data is highly unbalanced; the number of patients who have or haven’t suffered a stroke are very uneven. To deal with this I use the downsample method - remove some of the data so it is balanced.</li>
+<li>Impute null values using a linear regression model</li>
+</ul>
+<p>I specify that I want to use a random forest model, and I want to tune the parameters to try and get the best model possible. The original kaggle task found <a href="https://www.kaggle.com/fedesoriano/stroke-prediction-dataset/tasks?taskId=3281">here</a> requires a high F1 score due to the imbalanced data, so I shall pick the model based on this metric.</p>
+<pre><code>## # A tibble: 5 x 8
+##    mtry min_n .metric .estimator  mean     n std_err .config              
+##   &lt;int&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;                
+## 1     5    14 f_meas  binary     0.826    10 0.00666 Preprocessor1_Model01
+## 2     3    10 f_meas  binary     0.826    10 0.00624 Preprocessor1_Model19
+## 3     5     8 f_meas  binary     0.826    10 0.00603 Preprocessor1_Model03
+## 4     9    24 f_meas  binary     0.825    10 0.00581 Preprocessor1_Model07
+## 5     6     4 f_meas  binary     0.825    10 0.00617 Preprocessor1_Model05</code></pre>
+<pre class="r"><code>recipe &lt;- training %&gt;%
+  recipe(Stroke ~.) %&gt;%
+  step_center(all_numeric_predictors()) %&gt;%
+  step_scale(all_numeric_predictors()) %&gt;%
+  step_downsample(Stroke) %&gt;%
+  step_impute_linear(BMI)
+
+model &lt;- rand_forest(trees = 1000, 
+                     mode = &quot;classification&quot;,
+                     mtry = tune(),
+                     min_n = tune()) %&gt;%
+  set_engine(&quot;ranger&quot;)
+
+workflow &lt;- workflow() %&gt;%
+  add_recipe(recipe) %&gt;%
+  add_model(model)
+
+set.seed(1)
+tune_res &lt;- tune_grid(
+  workflow,
+  resamples = folds,
+  grid = 20,
+  metrics = metric_set(accuracy, sens, spec, f_meas)
+)
+
+show_best(tune_res, metric = &quot;f_meas&quot;)</code></pre>
+<p>The model works quite well, it’s over 70% accurate.</p>
+<pre class="r"><code>best_tune &lt;- select_best(tune_res, metric = &#39;f_meas&#39;)
+
+final &lt;- workflow %&gt;%
+  finalize_workflow(best_tune) %&gt;%
+  last_fit(split, metrics = metric_set(accuracy, sens, spec, f_meas))
+## Warning: package &#39;vctrs&#39; was built under R version 4.0.5
+
+collect_metrics(final)
+## # A tibble: 4 x 4
+##   .metric  .estimator .estimate .config             
+##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;               
+## 1 accuracy binary         0.715 Preprocessor1_Model1
+## 2 sens     binary         0.713 Preprocessor1_Model1
+## 3 spec     binary         0.764 Preprocessor1_Model1
+## 4 f_meas   binary         0.827 Preprocessor1_Model1</code></pre>
+</div>
+<div id="important-variables" class="section level1">
+<h1>Important Variables</h1>
+<p>It’s all very well we have a working model, but I would like to know which variables are important in the decision making process.</p>
+<p>Age is the most important variable by far. As I saw in the EDA section, older people are more susceptible to strokes. It’s more surprising that BMI actually plays a very important role within the model, when in the EDA section I couldn’t see much of a relationship.</p>
+<pre class="r"><code>model &lt;- rand_forest(trees = 1000, 
+                     mode = &quot;classification&quot;,
+                     mtry = best_tune$mtry,
+                     min_n = best_tune$min_n) %&gt;%
+  set_engine(&quot;ranger&quot;, importance = &quot;impurity&quot;)
+
+workflow &lt;- workflow() %&gt;%
+  add_recipe(recipe) %&gt;%
+  add_model(model)
+
+final &lt;- last_fit(workflow, split, metrics = metric_set(accuracy, roc_auc, f_meas))
+
+final %&gt;%
+  pluck(&quot;.workflow&quot;, 1) %&gt;%   
+  pull_workflow_fit() %&gt;% 
+  vip(num_features = 20, aesthetics = list(col = &quot;navyblue&quot;, fill = &quot;navyblue&quot;))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
