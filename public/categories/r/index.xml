@@ -7,16 +7,26 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Tue, 01 Dec 2020 21:13:14 -0500</lastBuildDate><atom:link href="https://rosepegler.netlify.app/categories/r/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 22 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://rosepegler.netlify.app/categories/r/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Can Clinical Data be used to Predict Whether a Patient Will Suffer a Stroke?</title>
+      <link>https://rosepegler.netlify.app/posts/2021/06/can-clinical-data-be-used-to-predict-whether-a-patient-will-suffer-a-stroke/</link>
+      <pubDate>Tue, 22 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://rosepegler.netlify.app/posts/2021/06/can-clinical-data-be-used-to-predict-whether-a-patient-will-suffer-a-stroke/</guid>
+      <description>This exercise uses the tidymodels package. I’ve watched a number of Julia Silge’s Tidy Tuesday videos but haven’t yet tried to conduct any machine learning using this package. This is my first time trying, and what better way to start than by looking at medical data. The data set can be found here.
+Data ExplorationThere’s an obvious difference between those who have suffered from heart disease or hypertension and those who haven’t.</description>
+    </item>
+    
     <item>
       <title>Hello R Markdown</title>
       <link>https://rosepegler.netlify.app/posts/2020/12/hello-r-markdown/</link>
       <pubDate>Tue, 01 Dec 2020 21:13:14 -0500</pubDate>
       
       <guid>https://rosepegler.netlify.app/posts/2020/12/hello-r-markdown/</guid>
-      <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
+      <description>R MarkdownThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
 You can embed an R code chunk like this:
-summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.</description>
+summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
     </item>
     
   </channel>

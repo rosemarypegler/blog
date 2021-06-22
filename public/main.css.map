@@ -1,7 +1,7 @@
 {
 	"version": 3,
 	"file": "main.css",
-	"sourceRoot": "C:/Users/Rose Pegler/Documents/Blog Projects/Web building/Web building/Web building",
+	"sourceRoot": "C:/Users/Rose Pegler/Documents/Blog Projects/Web building",
 	"sources": [
 		"themes/hugo-theme-hello-friend-ng/assets/scss/main.scss",
 		"themes/hugo-theme-hello-friend-ng/assets/scss/_normalize.scss",

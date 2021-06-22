@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>machine learning on Rose Pegler</title>
+    <link>https://rosepegler.netlify.app/tags/machine-learning/</link>
+    <description>Recent content in machine learning on Rose Pegler</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+    <lastBuildDate>Tue, 22 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://rosepegler.netlify.app/tags/machine-learning/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Can Clinical Data be used to Predict Whether a Patient Will Suffer a Stroke?</title>
+      <link>https://rosepegler.netlify.app/posts/2021/06/can-clinical-data-be-used-to-predict-whether-a-patient-will-suffer-a-stroke/</link>
+      <pubDate>Tue, 22 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://rosepegler.netlify.app/posts/2021/06/can-clinical-data-be-used-to-predict-whether-a-patient-will-suffer-a-stroke/</guid>
+      <description>This exercise uses the tidymodels package. I’ve watched a number of Julia Silge’s Tidy Tuesday videos but haven’t yet tried to conduct any machine learning using this package. This is my first time trying, and what better way to start than by looking at medical data. The data set can be found here.
+Data ExplorationThere’s an obvious difference between those who have suffered from heart disease or hypertension and those who haven’t.</description>
+    </item>
+    
+  </channel>
+</rss>
