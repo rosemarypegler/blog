@@ -213,7 +213,7 @@ final <- last_fit(workflow, split, metrics = metric_set(accuracy, roc_auc, f_mea
 final %>%
   pluck(".workflow", 1) %>%   
   pull_workflow_fit() %>% 
-  vip(num_features = 20, aesthetics = list(col = "navyblue", fill = "navyblue"))
+  vip(num_features = 20, aesthetics = list(col = "#440154FF", fill = "#440154FF"))
 
 ```
 
