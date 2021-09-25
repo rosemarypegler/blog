@@ -1,0 +1,441 @@
+---
+title: Visualising London's Airbnb Data
+author: Rose Pegler
+date: '2021-09-25'
+slug: visualising-london-s-airbnb-data
+categories:
+  - Blog
+  - R
+tags:
+  - R
+  - ggplot
+toc: no
+images: ~
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(spacyr)
+library(tmaptools)
+library(ggrepel)
+library(sf)
+library(tidytext)
+library(tm)
+library(tidylo)
+theme_set(theme_minimal())
+```
+
+## AirBnB Data
+
+One of my favourite tasks when starting a new project is to perform exploratory data analysis. It gives me the opportunity to learn about the different variables before delving into the more 'sciencey' tasks.
+
+[Inside AirBnB](http://insideairbnb.com/about.html) have scraped public AirBnB data for various locations and made it available to the public. I've seen a number of people use these datasets for predictive analysis projects, but I want to focus on producing visualisations. I also want to focus the analysis on London as it is where I'm currently living.
+
+The dataset spans from 2009 to 2021 and contains information for 63,000 listings.
+
+```{r, eval = F, warning = F, message = F, echo = F}
+data <- read.csv("listings.csv")
+data <- data %>%
+  select(-c(id, listing_url, last_scraped, scrape_id,
+            picture_url, host_id, host_url, host_location, host_thumbnail_url, host_picture_url,
+            host_listings_count, host_verifications,
+            neighbourhood_group_cleansed, bathrooms, maximum_minimum_nights, maximum_maximum_nights, maximum_nights_avg_ntm,
+            minimum_maximum_nights, minimum_minimum_nights, minimum_nights_avg_ntm,
+            calendar_updated, availability_30, availability_60,
+            availability_90, availability_365, calendar_last_scraped,
+            number_of_reviews_l30d, number_of_reviews_ltm, license, calculated_host_listings_count_entire_homes, calculated_host_listings_count_private_rooms, calculated_host_listings_count_shared_rooms))
+```
+
+```{r, eval = F, warning = F, message = F, echo = F}
+names <- tolower(data$name)
+
+spacy_initialize()
+
+parsed_names <- spacy_parse(names, lemma = F, entity = F, multithread = F)
+
+parsed_names_adjectives <- parsed_names %>%
+  filter(pos == 'ADJ') %>%
+  mutate(doc_id = as.integer(str_remove(doc_id, "text"))) %>%
+  group_by(doc_id) %>%
+  mutate(name_adjectives = paste0(token, collapse = " ")) %>% 
+  select(doc_id, name_adjectives) %>% 
+  unique()
+
+parsed_names_nouns <- parsed_names %>%
+  filter(pos == 'NOUN') %>%
+  mutate(doc_id = as.integer(str_remove(doc_id, "text"))) %>%
+  group_by(doc_id) %>%
+  mutate(name_nouns = paste0(token, collapse = " ")) %>% 
+  select(doc_id, name_nouns) %>% 
+  unique()
+```
+
+```{r, eval = F, warning = F, message = F, echo = F}
+descriptions <- tolower(data$description)
+
+parsed_descriptions <- spacy_parse(descriptions, lemma = F, entity = F, multithread = F)
+
+parsed_descriptions_adjectives <- parsed_descriptions %>%
+  filter(pos == 'ADJ') %>%
+  mutate(doc_id = as.integer(str_remove(doc_id, "text"))) %>%
+  group_by(doc_id) %>%
+  mutate(des_adjectives = paste0(token, collapse = " ")) %>% 
+  select(doc_id, des_adjectives) %>% 
+  unique()
+
+parsed_descriptions_nouns <- parsed_descriptions %>%
+  filter(pos == 'NOUN') %>%
+  mutate(doc_id = as.integer(str_remove(doc_id, "text"))) %>%
+  group_by(doc_id) %>%
+  mutate(des_nouns = paste0(token, collapse = " ")) %>% 
+  select(doc_id, des_nouns) %>% 
+  unique()
+```
+
+
+``` {r, eval = F, warning = F, message = F, fig.align = 'center', echo = F}
+parsed_names_cleaned <- parsed_names_adjectives %>%
+  full_join(parsed_names_nouns) %>%
+  full_join(parsed_descriptions_adjectives) %>%
+  full_join(parsed_descriptions_nouns)
+
+data <- data %>%
+  rowid_to_column() %>% 
+  left_join(parsed_names_cleaned, by = c('rowid' = 'doc_id'))%>%
+  relocate(name_adjectives, name_nouns, 
+           des_adjectives, des_nouns,
+           .after = rowid) %>%
+  mutate(amenities = str_remove_all(amenities,
+                                    "\\[|\\]|\""))
+
+rm(parsed_names, parsed_descriptions, parsed_names_cleaned,
+   parsed_descriptions_nouns, parsed_descriptions_adjectives,
+   parsed_names_nouns, parsed_names_adjectives)
+
+```
+
+## Listings per Borough
+
+The London borough with the most Airbnb listings is Westminster, and the borough with the least listings is Havering. The number of listings increase as you get nearer to the city centre, but the city centre itself doesn't actually have that many. In Greater London, boroughs like Brent, Barnet and Haringey still have a relatively high number of listings.
+
+```{r, warning = F, message = F, fig.align = 'center', echo = F}
+data <- readRDS("data_nouns_adjectives.rds")
+original_data <- read.csv("listings.csv")
+data$id <- original_data$id
+
+data <- data %>%
+  mutate(price = str_remove_all(price, "\\$"),
+         price = as.numeric(price),
+         price = price / 1.38) %>%
+  relocate(id, .before = name_adjectives)
+
+boroughs <- read_sf("ESRI/London_Borough_Excluding_MHW.shp")
+boroughs_listing_count <- data %>%
+  count(neighbourhood_cleansed)
+
+boroughs_listing_count <- boroughs %>%
+  left_join(boroughs_listing_count, by = c("NAME" = "neighbourhood_cleansed"))
+
+boroughs_listing_count <- boroughs_listing_count %>%
+  mutate(CENTROID = map(geometry, st_centroid),
+         COORDS = map(CENTROID, st_coordinates),
+         COORDS_X = map_dbl(COORDS, 1),
+         COORDS_Y = map_dbl(COORDS, 2))
+
+boroughs_listing_count %>%
+  mutate(NAME = ifelse(NAME == "City of London",
+                       "City",
+                       NAME),
+         NAME = ifelse(NAME == "Kensington and Chelsea",
+                       "K & C",
+                       NAME),
+         NAME = ifelse(NAME == "Hammersmith and Fulham",
+                       "H & F",
+                       NAME)) %>%
+  ggplot(aes(fill = n)) +
+  geom_sf(color = "white") +
+  scale_fill_viridis_c(option = "magma", begin = 0.35, direction = -1,
+                       end = 0.95) +
+  labs(fill = "Number of \nlistings") + 
+  theme(axis.ticks.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title = element_blank(),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) +
+  geom_sf_text(aes(label = NAME),
+               color = "black",
+               size = 2.8,
+               nudge_y = 100)
+
+```
+
+## Price per Listing
+
+Now instead of looking at boroughs, I have plotted the individual listings using the longitude and latitude of the property, along with their corresponding price. I like this plot because as you get nearer to the centre the prices rise and look like city lights. You can also see the density of listings increase, and the outline of the river start to show.
+
+```{r, warning = F, message = F, fig.align = 'center', echo = F}
+data %>% 
+  ggplot(aes(longitude, latitude, color = price)) +
+  geom_point(alpha = 0.6, size = 0.5) +
+  labs(x = "Latitude", y = "Longitude", color = "Price") +
+  scale_color_viridis_c(option = "magma")
+```
+
+## Description Adjectives
+
+I built this next plot as I was interested in seeing whether there are certain adjectives that hosts use in their property descriptions that continually have high review scores. I created this plot by taking the average review score for each adjective and ensured that the adjective had been used a 'significant' amount of times. For this exercise, this number was 50.
+
+* The adjective "bi" has a mean score far higher than the other adjectives. This generally refers to either bi-fold doors or a bi-level property, meaning people like places with lots of light/access to the outdoors, or plenty of space.
+* Guests also appear to like places that have influences from other countries, with "Japanese", "Scandinavian", "German", and "Turkish" all featuring with a high score.
+* Guests prefer leafy suburban areas where they can have some peace and quiet.
+
+
+```{r, warning = F, message = F, fig.align = 'center', echo = F}
+adjectives <- data %>%
+  filter(!is.na(review_scores_rating)) %>%
+  unnest_tokens(adjective, des_adjectives) %>%
+  group_by(adjective) %>%
+  summarise(n = n(),
+            mean_score = mean(review_scores_rating)) %>%
+  arrange(desc(mean_score)) %>%
+  filter(!adjective %in% c("wanstead", "westbourne"),
+         n > 50) %>%
+  top_n(50, wt = mean_score)
+
+adjectives %>%
+  ggplot(aes(n, mean_score, color = mean_score)) +
+  geom_point(show.legend = F) +
+  geom_text_repel(aes(label = adjective),
+                  size = 3,
+                  show.legend = F) +
+  scale_x_log10() +
+  labs(x = "Number of times word has appeared (log-trans)",
+       y = "Mean Review Score",
+       title = "Top Mean Scoring Adjectives used in Listing Descriptions") +
+  scale_color_viridis_c(end = 0.7) +
+  theme(plot.title = element_text(face = 'bold'))
+```
+
+## Description Nouns
+
+I have repeated the same exercise, but this time using nouns instead of adjectives.
+
+* For families, it's important that the children have somewhere to go. Listings with a nursery or playroom score highly.
+* The appearance of the property is another key factor - people want nice artwork, architecture, and plants.
+* Guests also enjoy it when the hosts provide them with food and drink. There are multiple words in the top nouns related to this - tea, coffee, cereal, juice, salt, etc.
+
+```{r, warning = F, message = F, fig.align = 'center', echo = F}
+nouns <- data %>%
+  filter(!is.na(review_scores_rating)) %>%
+  unnest_tokens(noun, des_nouns) %>%
+  group_by(noun) %>%
+  summarise(n = n(),
+            mean_score = mean(review_scores_rating)) %>%
+  arrange(desc(mean_score)) %>%
+  filter(!noun %in% c("ï", "s", "en", "1930s", "bi", "bits"),
+         n > 50) %>%
+  top_n(50, wt = mean_score)
+
+nouns %>%
+  ggplot(aes(n, mean_score, color = mean_score)) +
+  geom_point(show.legend = F) +
+  geom_text_repel(aes(label = noun),
+                  size = 3,
+                  show.legend = F) +
+  scale_x_log10() +
+  labs(x = "Number of times word has appeared (log-trans)",
+       y = "Mean Review Score",
+       title = "Top Mean Scoring Nouns used in Listing Names") +
+  scale_color_viridis_c(end = 0.7) +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+## Amenities
+
+The same exercise has been repeated but instead I will look at the amenities that listings have included. There are over 1,000 unique amenities included within this dataset.
+
+With 'Bathroom essentials' and 'Bedroom comforts' are slightly ambiguous, many of the top scoring amenities centre around entertainment with people finding enjoyment through board games, sound systems, and a fire pit. The rest of the top-scoring amenities are either practical, such as cleaning products, or nice-to-haves, such as a Nespresso coffee machine.
+
+```{r, warning = F, message = F, fig.align = 'center', echo = F}
+amenities <- data %>%
+  filter(!is.na(review_scores_rating)) %>%
+  select(amenities, review_scores_rating) %>%
+  separate_rows(amenities, sep = ", ") %>%
+  group_by(amenities) %>%
+  summarise(n = n(),
+            mean_score = mean(review_scores_rating)) %>%
+  arrange(desc(mean_score)) %>%
+  filter(n > 50) %>%
+  top_n(40, wt = mean_score)
+
+amenities %>%
+  ggplot(aes(n, mean_score, color = mean_score)) +
+  geom_point(show.legend = F) +
+  geom_text_repel(aes(label = amenities),
+                  size = 3,
+                  show.legend = F) +
+  labs(x = "Number of times amenity has appeared",
+       y = "Mean Review Score",
+       title = "Top Mean Scoring Amenities",
+       subtitle = "Note that n has not been log-transformed") +
+  scale_color_viridis_c(end = 0.7) +
+  theme(plot.title = element_text(face = "bold"))
+
+```
+
+## House Prices vs Airbnb
+
+This next plot compares the average house price for each borough with the average Airbnb price in that borough. House price data has been taken from [here](https://data.london.gov.uk/dataset/average-house-prices). I had to take 2019 data as it is the latest available.
+
+The observations follow an expected trajectory, but there are a couple of points to note.
+
+Kensington & Chelsea and Westminster are way out on their own in terms of both house prices and Airbnb prices. They are clearly desirable places to live but I probably wouldn't bother coughing up the cash to stay here when there are so many other places in London. 
+
+Camden is a more desirable place to live than in the city centre of London (desirability being based off house prices) but it is cheaper to stay in. Similar places include Hammersmith & Fulham and Richmond upon Thames. 
+Southwark, Lambeth, Tower Hamlets and Hackney are right near the city centre but it's far cheaper to in an Airbnb there compared to the others.
+
+Haringey's house prices are similar to some of the boroughs near the city centre, but it is one of the cheapest boroughs to stay in.
+
+```{r, warning = F, message = F, fig.align = 'center', echo = F}
+house_price_data <- read.csv("land-registry-house-prices-borough.csv") %>%
+  filter(Year == "Year ending Sep 2017",
+         Measure == "Mean") 
+
+data_hp <- data %>%
+  left_join(house_price_data,
+            by = c("neighbourhood_cleansed" = "Area")) %>%
+  mutate(Value = str_remove_all(Value, "\\,"),
+         Value = as.numeric(Value))
+
+data_hp %>%
+  group_by(neighbourhood_cleansed) %>%
+  summarise(price = mean(price, na.rm = T),
+            Value = mean(Value),
+            n = n()) %>%
+  filter(neighbourhood_cleansed != "") %>%
+  ggplot(aes(price, Value, size = n, fill = neighbourhood_cleansed)) +
+  geom_point(alpha = 0.7, color = "black", shape = 21) +
+  scale_size(range = c(.1, 15), name="No. listings") +
+  scale_fill_viridis_d(guide = F) +
+  geom_text_repel(aes(label = neighbourhood_cleansed),
+                  show.legend = F, size = 3.2, color = "black") +
+  labs(x = "Average Airbnb Price per Night",
+       y = "Average House Price (2019)")
+```
+
+## Adjectives used in Boroughs
+
+Inside Airbnb also offer a reviews dataset that tells us the comments left in reviews for each listing. I wanted to see whether adjectives in reviews differ across boroughs. I chose 5 boroughs for the exercise - Barking and Dagenham, Kingston upon Thames, Wandsworth, Croydon, and Hackney.
+
+I originally tried looking at this by finding the most frequently occurring adjectives for each borough, but these didn't really differ across them - in reviews, people regularly say the listing is nice or lovely, but it was difficult to find any differing language. Instead, I have used the `tidylo` package which calculates the weighted log odds for each terms in each borough. This tells us the words which are more likely to appear in reviews in each borough.
+
+* Hackney stands out from the others as a _trendy_ place to stay, somewhere that people should go if they want to be in a _vibrant_ area.
+* Kingston upon Thames offers up _gorgeous_ homes. Interestingly, _Korean_ comes up - Kingston upon Thames has a large South Korean community, meaning there's lots of Korean hosts and places to eat.
+* *Holy* appearing in Wandsworth adjectives is actually people referring the Holy Cow Indian restaurant rather than anything religious.
+* Barking and Dagenham reviews contain the usual adjectives. Perhaps you're more likely to get a clean and comfortable apartment.
+* Croydon places are _snug_ and the hosts tend to be _reliable_.
+
+```{r, warning = F, message = F, fig.align = 'center', echo = F}
+review_data <- read.csv("reviews.csv")
+review_data_boroughs <- review_data %>%
+  left_join(data, by = c("listing_id" = "id")) %>%
+  filter(neighbourhood_cleansed %in% c("Barking and Dagenham", "Kingston upon Thames", "Wandsworth", "Croydon", "Hackney"))
+
+# parse text
+review_data_boroughs <- review_data_boroughs %>%
+  mutate(comments = tolower(comments),
+         comments = removePunctuation(comments),
+         comments = removeWords(comments, stop_words$word),
+         comments = stripWhitespace(comments))
+
+# remove names
+host_names <- unique(tolower(review_data_boroughs$host_name))
+plural_names <- paste(host_names, "s", sep = "")
+all_names <- c(host_names, plural_names)
+
+words <- review_data_boroughs %>%
+  unnest_tokens(word, comments) %>%
+  filter(!word %in% all_names) %>%
+  count(neighbourhood_cleansed, word) %>%
+  bind_log_odds(neighbourhood_cleansed, word, n) %>%
+  left_join(parts_of_speech) %>%
+  drop_na()
+```
+
+
+```{r, warning = F, message = F, fig.align = 'center', echo = F, out.height='100%', out.width='100%'}
+adjectives <- words %>%
+  filter(pos == "Adjective",
+         !word %in% c("vee", "tres", "overground", "especial")) %>%
+  filter(n >= 10) %>%
+  group_by(neighbourhood_cleansed) %>%
+  top_n(10, log_odds_weighted) %>%
+  ungroup()
+
+empty_bar <- 1
+to_add <- data.frame(matrix(NA, empty_bar*nlevels(as.factor(adjectives$neighbourhood_cleansed)), ncol(adjectives)))
+colnames(to_add) <- colnames(adjectives)
+to_add$neighbourhood_cleansed <- rep(levels(as.factor(adjectives$neighbourhood_cleansed)), each=empty_bar)
+data <- rbind(adjectives, to_add)
+data = data %>% arrange(neighbourhood_cleansed, log_odds_weighted)
+data$id <- seq(1, nrow(data))
+
+# Get the name and the y position of each label
+label_data <- data
+number_of_bar <- nrow(label_data)
+angle <- 90 - 360 * (label_data$id-0.5) /number_of_bar     # I substract 0.5 because the letter must have the angle of the center of the bars. Not extreme right(1) or extreme left (0)
+label_data$hjust <- ifelse( angle < -90, 1, 0)
+label_data$angle <- ifelse(angle < -90, angle+180, angle)
+
+data %>%
+  ggplot(aes(x = as.factor(id), y = log_odds_weighted, fill = neighbourhood_cleansed)) +
+  geom_bar(stat="identity", alpha=0.5) +
+  ylim(-10,20) +
+  labs(fill = "Borough",
+       title = "Adjectives More Likely to Appear in Reviews for each Borough",
+       subtitle = "Determined using weighted log-odds. The taller the bar the more likely it is used \nto describe a listing in that area.") +
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    legend.key.size = unit(0.5, "lines"),
+    plot.title = element_text(size = 15, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    plot.margin = unit(c(0.5,0.5,0.5,0.5),"cm")
+  ) +
+  coord_polar() + 
+  geom_text(data=label_data, aes(x = id, y = log_odds_weighted + 1, label=word, hjust=hjust), size=2.8, angle= label_data$angle, inherit.aes = FALSE ) +
+  scale_fill_viridis_d() 
+ 
+```
+
+## Reviews over time
+
+In this final plot, I wanted to see how the frequency of reviews over time changed. The number of Airbnbs being booked increased year-on-year until March 2020, when the UK went into lockdown. Between April and June 2020 there were virtually no Airbnbs being booked. The number increased but decreased again during Novemeber and December when we went other lockdowns. By April 2021 the number being booked shot up again. It's also interesting to see how the number of places being booked peaks in July every year and, for some reason, October also seems to be a pretty popular month, perhaps because of half-terms.
+
+```{r, warning = F, message = F, fig.align = 'center', echo = F}
+review_data <- review_data %>%
+  mutate(date == as.Date(date),
+         year = lubridate::year(date),
+         month = lubridate::month(date)) %>%
+  group_by(year, month) %>%
+  summarise(n = n())
+
+review_data %>%
+  filter(!year %in% c(2009, 2010)) %>%
+  ggplot(aes(factor(month),
+             factor(year, levels=rev(unique(year))), fill = n)) +
+  geom_tile() +
+  scale_fill_viridis_c(direction = -1, option = "magma",
+                       end = 0.6) +
+  labs(x = "Month", y = "Year", fill = "No. reviews")
+```
+
+The code for this post can be found [here](https://github.com/rosemarypegler/blog/tree/main/content).

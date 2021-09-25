@@ -85,3 +85,8 @@ menu:
     - identifier: posts
       name: Posts
       url: posts/
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
