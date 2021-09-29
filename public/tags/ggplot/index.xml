@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ggplot on Rose Pegler</title>
+    <link>https://rosepegler.netlify.app/tags/ggplot/</link>
+    <description>Recent content in ggplot on Rose Pegler</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+    <lastBuildDate>Sat, 25 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://rosepegler.netlify.app/tags/ggplot/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Visualising London&#39;s Airbnb Data</title>
+      <link>https://rosepegler.netlify.app/posts/2021/09/visualising-londons-airbnb-data/</link>
+      <pubDate>Sat, 25 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://rosepegler.netlify.app/posts/2021/09/visualising-londons-airbnb-data/</guid>
+      <description>AirBnB DataOne of my favourite tasks when starting a new project is to perform exploratory data analysis. It gives me the opportunity to learn about the different variables before delving into the more ‘sciencey’ tasks.
+Inside AirBnB have scraped public AirBnB data for various locations and made it available to the public. I’ve seen a number of people use these datasets for predictive analysis projects, but I want to focus on producing visualisations.</description>
+    </item>
+    
+  </channel>
+</rss>

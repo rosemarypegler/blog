@@ -13,19 +13,6 @@ toc: no
 images: ~
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
-library(spacyr)
-library(tmaptools)
-library(ggrepel)
-library(sf)
-library(tidytext)
-library(tm)
-library(tidylo)
-theme_set(theme_minimal())
-```
-
 ## AirBnB Data
 
 One of my favourite tasks when starting a new project is to perform exploratory data analysis. It gives me the opportunity to learn about the different variables before delving into the more 'sciencey' tasks.

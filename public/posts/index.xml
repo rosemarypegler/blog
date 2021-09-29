@@ -6,8 +6,96 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
         <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-        <lastBuildDate>Tue, 22 Jun 2021 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Sat, 25 Sep 2021 00:00:00 +0000</lastBuildDate>
         <atom:link href="https://rosepegler.netlify.app/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>Visualising London&#39;s Airbnb Data</title>
+            <link>https://rosepegler.netlify.app/posts/2021/09/visualising-londons-airbnb-data/</link>
+            <pubDate>Sat, 25 Sep 2021 00:00:00 +0000</pubDate>
+            
+            <guid>https://rosepegler.netlify.app/posts/2021/09/visualising-londons-airbnb-data/</guid>
+            <description>AirBnB DataOne of my favourite tasks when starting a new project is to perform exploratory data analysis. It gives me the opportunity to learn about the different variables before delving into the more ‘sciencey’ tasks.
+Inside AirBnB have scraped public AirBnB data for various locations and made it available to the public. I’ve seen a number of people use these datasets for predictive analysis projects, but I want to focus on producing visualisations.</description>
+            <content type="html"><![CDATA[
+
+<div id="TOC">
+
+</div>
+
+<div id="airbnb-data" class="section level2">
+<h2>AirBnB Data</h2>
+<p>One of my favourite tasks when starting a new project is to perform exploratory data analysis. It gives me the opportunity to learn about the different variables before delving into the more ‘sciencey’ tasks.</p>
+<p><a href="http://insideairbnb.com/about.html">Inside AirBnB</a> have scraped public AirBnB data for various locations and made it available to the public. I’ve seen a number of people use these datasets for predictive analysis projects, but I want to focus on producing visualisations. I also want to focus the analysis on London as it is where I’m currently living.</p>
+<p>The dataset spans from 2009 to 2021 and contains information for 63,000 listings.</p>
+</div>
+<div id="listings-per-borough" class="section level2">
+<h2>Listings per Borough</h2>
+<p>The London borough with the most Airbnb listings is Westminster, and the borough with the least listings is Havering. The number of listings increase as you get nearer to the city centre, but the city centre itself doesn’t actually have that many. In Greater London, boroughs like Brent, Barnet and Haringey still have a relatively high number of listings.</p>
+<p><img src="https://rosepegler.netlify.app/posts/2021/09/visualising-londons-airbnb-data/index_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="price-per-listing" class="section level2">
+<h2>Price per Listing</h2>
+<p>Now instead of looking at boroughs, I have plotted the individual listings using the longitude and latitude of the property, along with their corresponding price. I like this plot because as you get nearer to the centre the prices rise and look like city lights. You can also see the density of listings increase, and the outline of the river start to show.</p>
+<p><img src="https://rosepegler.netlify.app/posts/2021/09/visualising-londons-airbnb-data/index_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="description-adjectives" class="section level2">
+<h2>Description Adjectives</h2>
+<p>I built this next plot as I was interested in seeing whether there are certain adjectives that hosts use in their property descriptions that continually have high review scores. I created this plot by taking the average review score for each adjective and ensured that the adjective had been used a ‘significant’ amount of times. For this exercise, this number was 50.</p>
+<ul>
+<li>The adjective “bi” has a mean score far higher than the other adjectives. This generally refers to either bi-fold doors or a bi-level property, meaning people like places with lots of light/access to the outdoors, or plenty of space.</li>
+<li>Guests also appear to like places that have influences from other countries, with “Japanese”, “Scandinavian”, “German”, and “Turkish” all featuring with a high score.</li>
+<li>Guests prefer leafy suburban areas where they can have some peace and quiet.</li>
+</ul>
+<p><img src="https://rosepegler.netlify.app/posts/2021/09/visualising-londons-airbnb-data/index_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="description-nouns" class="section level2">
+<h2>Description Nouns</h2>
+<p>I have repeated the same exercise, but this time using nouns instead of adjectives.</p>
+<ul>
+<li>For families, it’s important that the children have somewhere to go. Listings with a nursery or playroom score highly.</li>
+<li>The appearance of the property is another key factor - people want nice artwork, architecture, and plants.</li>
+<li>Guests also enjoy it when the hosts provide them with food and drink. There are multiple words in the top nouns related to this - tea, coffee, cereal, juice, salt, etc.</li>
+</ul>
+<p><img src="https://rosepegler.netlify.app/posts/2021/09/visualising-londons-airbnb-data/index_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="amenities" class="section level2">
+<h2>Amenities</h2>
+<p>The same exercise has been repeated but instead I will look at the amenities that listings have included. There are over 1,000 unique amenities included within this dataset.</p>
+<p>With ‘Bathroom essentials’ and ‘Bedroom comforts’ are slightly ambiguous, many of the top scoring amenities centre around entertainment with people finding enjoyment through board games, sound systems, and a fire pit. The rest of the top-scoring amenities are either practical, such as cleaning products, or nice-to-haves, such as a Nespresso coffee machine.</p>
+<p><img src="https://rosepegler.netlify.app/posts/2021/09/visualising-londons-airbnb-data/index_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="house-prices-vs-airbnb" class="section level2">
+<h2>House Prices vs Airbnb</h2>
+<p>This next plot compares the average house price for each borough with the average Airbnb price in that borough. House price data has been taken from <a href="https://data.london.gov.uk/dataset/average-house-prices">here</a>. I had to take 2019 data as it is the latest available.</p>
+<p>The observations follow an expected trajectory, but there are a couple of points to note.</p>
+<p>Kensington &amp; Chelsea and Westminster are way out on their own in terms of both house prices and Airbnb prices. They are clearly desirable places to live but I probably wouldn’t bother coughing up the cash to stay here when there are so many other places in London.</p>
+<p>Camden is a more desirable place to live than in the city centre of London (desirability being based off house prices) but it is cheaper to stay in. Similar places include Hammersmith &amp; Fulham and Richmond upon Thames.
+Southwark, Lambeth, Tower Hamlets and Hackney are right near the city centre but it’s far cheaper to in an Airbnb there compared to the others.</p>
+<p>Haringey’s house prices are similar to some of the boroughs near the city centre, but it is one of the cheapest boroughs to stay in.</p>
+<p><img src="https://rosepegler.netlify.app/posts/2021/09/visualising-londons-airbnb-data/index_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="adjectives-used-in-boroughs" class="section level2">
+<h2>Adjectives used in Boroughs</h2>
+<p>Inside Airbnb also offer a reviews dataset that tells us the comments left in reviews for each listing. I wanted to see whether adjectives in reviews differ across boroughs. I chose 5 boroughs for the exercise - Barking and Dagenham, Kingston upon Thames, Wandsworth, Croydon, and Hackney.</p>
+<p>I originally tried looking at this by finding the most frequently occurring adjectives for each borough, but these didn’t really differ across them - in reviews, people regularly say the listing is nice or lovely, but it was difficult to find any differing language. Instead, I have used the <code>tidylo</code> package which calculates the weighted log odds for each terms in each borough. This tells us the words which are more likely to appear in reviews in each borough.</p>
+<ul>
+<li>Hackney stands out from the others as a <em>trendy</em> place to stay, somewhere that people should go if they want to be in a <em>vibrant</em> area.</li>
+<li>Kingston upon Thames offers up <em>gorgeous</em> homes. Interestingly, <em>Korean</em> comes up - Kingston upon Thames has a large South Korean community, meaning there’s lots of Korean hosts and places to eat.</li>
+<li><em>Holy</em> appearing in Wandsworth adjectives is actually people referring the Holy Cow Indian restaurant rather than anything religious.</li>
+<li>Barking and Dagenham reviews contain the usual adjectives. Perhaps you’re more likely to get a clean and comfortable apartment.</li>
+<li>Croydon places are <em>snug</em> and the hosts tend to be <em>reliable</em>.</li>
+</ul>
+<p><img src="https://rosepegler.netlify.app/posts/2021/09/visualising-londons-airbnb-data/index_files/figure-html/unnamed-chunk-12-1.png" width="100%" height="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="reviews-over-time" class="section level2">
+<h2>Reviews over time</h2>
+<p>In this final plot, I wanted to see how the frequency of reviews over time changed. The number of Airbnbs being booked increased year-on-year until March 2020, when the UK went into lockdown. Between April and June 2020 there were virtually no Airbnbs being booked. The number increased but decreased again during Novemeber and December when we went other lockdowns. By April 2021 the number being booked shot up again. It’s also interesting to see how the number of places being booked peaks in July every year and, for some reason, October also seems to be a pretty popular month, perhaps because of half-terms.</p>
+<p><img src="https://rosepegler.netlify.app/posts/2021/09/visualising-londons-airbnb-data/index_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The code for this post can be found <a href="https://github.com/rosemarypegler/blog/tree/main/content">here</a>.</p>
+</div>
+]]></content>
+        </item>
         
         <item>
             <title>Can Clinical Data be used to Predict Whether a Patient Will Suffer a Stroke?</title>
