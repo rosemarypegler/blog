@@ -38,5 +38,14 @@ Data ExplorationThere’s an obvious difference between those who have suffered
 This blog&amp;rsquo;s purpose is to showcase my non-work related projects.</description>
     </item>
     
+    <item>
+      <title>Predicting Disaster-Related Tweets</title>
+      <link>https://rosepegler.netlify.app/posts/1/01/predicting-disaster-related-tweets/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://rosepegler.netlify.app/posts/1/01/predicting-disaster-related-tweets/</guid>
+      <description>Introduction + DataThis notebook has been produced as part of my first Kaggle competition. We are provided with a dataset containing around 7,000 tweets which may or may not relate to a real disaster that has occurred. There are only two other variables; keyword which contains a disaster-related keyword (or NA) and location which details the provided location of the tweet (also can be NA).</description>
+    </item>
+    
   </channel>
 </rss>

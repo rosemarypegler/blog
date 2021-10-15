@@ -1,0 +1,362 @@
+---
+title: "Predicting Disaster-Related Tweets"
+author: "Rose Pegler"
+date: "08/10/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(tidymodels)
+library(tidylo)
+library(tidytext)
+library(tm)
+library(viridis)
+library(themis)
+library(textrecipes)
+library(vip)
+library(tictoc)
+library(finetune)
+library(stringr)
+library(textdata)
+library(DT)
+theme_set(theme_minimal())
+```
+
+## Introduction + Data
+
+This notebook has been produced as part of my first Kaggle competition. We are provided with a dataset containing around 7,000 tweets which may or may not relate to a real disaster that has occurred. There are only two other variables; `keyword` which contains a disaster-related keyword (or NA) and `location` which details the provided location of the tweet (also can be NA). The task is to build a classification model that predicts on unlabelled data.
+
+The below table shows the first 100 posts in the training dataset.
+
+```{r, warning = F, message = F}
+data <- read_csv("data/train.csv")
+test_data <- read_csv("data/test.csv")
+
+DT::datatable(head(data, 100),
+              options = list(
+                pageLength = 5, autoWidth = TRUE
+              ))
+```
+
+As the dataset contains just 3 predictors, the first stage is to add variables which I believe could - emphasis on could - have some predictive power. The information I have added is:
+
+* Whether the tweet contains a fullstop, link, exclamation mark, question mark, hashtag, number, tag (@), or swear word.
+* Whether the location contains a comma. The reasoning behind this is that I hypothesised that locations containing a comma like "London, UK" could signify more legitimate locations and subsequently legitimate disasters.
+* Number of hastags, tags and links.
+* Number of words in the location and text variables.
+
+Processing of the terms comes later in the process.
+
+```{r, warning = F, message = F}
+swear_words <- c("anal|anus|arse|ass|ballsack|balls|bastard|bitch|biatch|bloody|blowjob|blow job|bollock|bollok|boner|boob|bugger|bum|butt|buttplug|clitoris|cock|coon|crap|cunt|damn|dick|dildo|dyke|fag|feck|fellate|fellatio|felching|fuck|f u c k|fudgepacker|fudge packer|flange|goddamn|goddamn|hell|homo|jerk|jizz|knobend|knobend|labia|lmao|lmfao|muff|nigger|nigga|omg|omfg|penis|piss|poop|prick|pube|pussy|queer|scrotum|sex|shit|slut|smegma|spunk|\\btit\\b|tosser|turd|twat|vagina|wank|whore|wtf")
+
+data <- data %>%
+  mutate(contains_fullstop = as.numeric(ifelse(str_detect(text, "\\."),
+                                           1,
+                                           0)),
+         contains_link = as.numeric(ifelse(str_detect(text, "http"),
+                                1,
+                                0)),
+         text = gsub(" ?(f|ht)tp(s?)://(.*)", "\ http", text),
+         contains_exclamation = as.numeric(ifelse(str_detect(text, "!"),
+                                       1,
+                                       0)),
+         contains_question = as.numeric(ifelse(str_detect(text, "\\?"),
+                                    1,
+                                    0)),
+         contains_hashtag = as.numeric(ifelse(str_detect(text, "\\#"),
+                                   1,
+                                   0)),
+         contains_number = as.numeric(ifelse(str_detect(text, "\\d"),
+                                  1,
+                                  0)),
+         text = gsub("\\d", "", text),
+         contains_at = as.numeric(ifelse(str_detect(text, "\\@"),
+                                     1,
+                                     0)),
+         contains_swear = as.numeric(ifelse(str_detect(text, swear_words),
+                                     1,
+                                     0)),
+         number_hash = str_count(text, "\\#"),
+         number_at = str_count(text, "\\@"),
+         number_link = str_count(text, "http"),
+         location_comma = as.numeric(ifelse(str_detect(location, "\\,"),
+                                        1,
+                                        0)),
+         location_comma = replace_na(location_comma, 0),
+         location_hash = as.numeric(ifelse(str_detect(location, "\\#"),
+                                        1,
+                                        0)),
+         location_hash = replace_na(location_hash, 0),
+         length = str_count(text, " ") + 1,
+         length_location = nchar(location),
+         length_location = replace_na(length_location, 0.0001)) %>%
+  dplyr::select(id, location, keyword, text, contains_fullstop, contains_link, contains_exclamation, contains_question,
+         contains_hashtag, contains_number, contains_at, contains_swear,
+         number_hash, number_at, number_link, location_comma, 
+         location_hash, length, length_location, target) %>%
+  mutate(target = factor(target))
+```
+
+## Exploratory Data Analysis
+
+### Categorical Variables
+
+Posts that are about real disasters are more likely to contain a link, hashtags, fullstop, or a number but less likely to contain a question mark, exclamation mark, swear word, or tag.
+
+```{r, warning = F, message = F, fig.align='center'}
+contains_info <-
+  data %>%
+  select(-length, -id, -keyword, -location, -number_link, -number_hash,
+         -number_at, -location_hash, -location_comma, -length_location) %>%
+  pivot_longer(-c(text, target)) %>%
+  group_by(name, target) %>%
+  count(value)
+
+contains_info %>%
+  filter(value == 1) %>%
+  ggplot(aes(name, n, fill = factor(target))) +
+  geom_col(position = position_fill(reverse = T)) +
+  coord_flip() +
+  scale_y_continuous(expand = expansion(mult = c(0, .01)), labels = scales::percent) +
+  scale_fill_viridis_d(direction = -1, end = 0.7) +
+  labs(x = NULL,
+       y = "% of posts that DO contain them",
+       fill = "Is the \ndisaster real?")
+```
+
+### Length Variables
+
+There doesn't appear to be much difference between the length of both the text and location variables, and the target variable. 
+
+```{r, warning = F, message = F, fig.align='center'}
+num_vars <- data %>%
+  select(length, length_location, target) %>%
+  rename(length_text = length) %>%
+  pivot_longer(-c(target))
+
+num_vars %>%
+  ggplot(aes(name, value, fill = factor(target))) +
+  geom_boxplot(alpha = 0.9) +
+  scale_fill_viridis_d(direction = -1, end = 0.7) +
+  labs(x = "Variable Name",
+       y = "Length",
+       fill = "Is the \ndisaster real?")
+```
+
+### Text Variable
+
+Using the `tidylo` package, I have calculated the weighted log-odds ratio for terms used in the text variable. This tells us which terms are more likely to appear in tweets about real disasters compared to other tweets. 
+
+Non-disaster posts are more likely to contain pronouns whilst real disaster tweets are more likely to contain links and contain specific details about the disaster that has occurred.
+
+```{r, warning = F, message = F, fig.align='center'}
+data <- data %>%
+  mutate(target = factor(target)) 
+
+data %>%
+  unnest_tokens(word, text) %>%
+  count(word, target) %>%
+  mutate(target = case_when(target == 0 ~ "Non-Disaster Tweet",
+                            target == 1 ~ "Disaster Tweet"),
+         target = factor(target, levels = c("Non-Disaster Tweet", "Disaster Tweet"))) %>%
+  bind_log_odds(target, word, n) %>%
+  group_by(target) %>%
+  top_n(15) %>%
+  ggplot(aes(fct_reorder(word, log_odds_weighted),
+             log_odds_weighted,
+             fill = target)) +
+  geom_col(show.legend = F) +
+  facet_wrap(~target, scales = "free") +
+  coord_flip() +
+  scale_fill_viridis_d(direction = -1, end = 0.7) +
+  labs(x = "Term",
+       y = "Log Odds Weighted")
+```
+
+## Data Preparation
+
+The first stage of preparation for modelling is to split the data into a training and testing set, stratified by the target variable. The training set is subsequently split into 10 folds for the modelling process.
+
+```{r, warning = F, message = F}
+set.seed(1)
+split <- initial_split(data, strata = target)
+training <- training(split)
+testing <- testing(split)
+
+folds <- vfold_cv(training, strata = target)
+```
+
+```{r glove, warning = F, message = F}
+vectors = data.table::fread('data/glove6b/glove.twitter.27B/glove.twitter.27B.200d.txt', data.table = F,  encoding = 'UTF-8') 
+
+vectors_reduced <- 
+  vectors %>%
+  rename(token = "V1") %>%
+  tibble()
+```
+
+The data then goes through various pre-processing steps:
+
+* The `location` variable is tokenised then filtered for the top 100 terms. These terms are converted into single variables within the dataset with the value equal to the term frequency for each document.
+* The `text` variable is tokenised then transformed using word embeddings. I have used pre-trained word embeddings from GloVe in an attempt to capture the relationship between terms so the model can locate differences in language between text in disaster and non-disaster tweets. 
+* The length of the `text` and `location` variables are right-skewed so these are log-transformed.
+* Anything classed as NA in the `keyword` variable is categorised into a new category called "unknown". The `keyword` variable is then transformed into dummy variables.
+* The `target` variable is unbalanced - there are around 1,000 more posts categorised as non-disaster - so new samples of disaster tweets are created using nearest neighbours.
+
+```{r, warning = F, message = F}
+recipe <- recipe(target ~ ., data = data %>% dplyr::select(-id)) %>%
+  step_tokenize(text, location) %>%
+  step_tokenfilter(location, max_tokens = 100) %>%
+  step_word_embeddings(text, embeddings = vectors_reduced) %>%
+  step_tf(location) %>%
+  step_log(length, length_location) %>%
+  step_unknown(keyword) %>%
+  step_dummy(keyword) %>%
+  step_smote(target)
+
+prepped_data <- recipe %>% prep() %>% bake(new_data = NULL)
+```
+
+## Modelling
+
+I have chosen to use an Xgboost model as it is a very powerful gradient boosting model that continually provides results with high accuracy. The model will undergo hyperparameter tuning in an effort to obtain the optimal model.
+
+```{r, warning = F, message = F}
+spec <- boost_tree(mtry = tune(),
+                   trees = 3000,
+                   min_n = tune(),
+                   tree_depth = 10,
+                   sample_size = 1,
+                   learn_rate = tune()) %>%
+  set_mode("classification") %>%
+  set_engine("xgboost")
+
+workflow <- workflow(recipe, spec)
+```
+
+```{r, eval=F, warning = F, message = F}
+grid <- grid_regular(mtry(c(5L,10L)),
+                     learn_rate(c(-3,-1)),
+                     min_n(c(2L,40L)),
+                     levels = 3)
+
+doParallel::registerDoParallel()
+
+tic()
+set.seed(1)
+tune <- tune_grid(
+  workflow,
+  resamples = folds,
+  grid = grid,
+  metrics = metric_set(f_meas)
+)
+toc()
+```
+
+The competition asks that predictions are made to maximise the F-score whereby 
+
+$$F-score = 2 \times \frac{precision \times recall}{precision + recall}$$
+
+The best tune displays a pretty high F-score of 0.84.
+
+```{r, warning = F, message = F}
+tune <- readRDS("data/xgboost_tune_tweets.rds")
+show_best(tune)
+```
+
+```{r, eval = F, warning = F, message = F}
+saveRDS(tune, "data/xgboost_tune_tweets.rds")
+```
+
+```{r, warning = F, message = F}
+final_ml <- tune %>%
+  select_best(metric = "f_meas")
+
+final_wf <- workflow %>%
+  finalize_workflow(final_ml) %>%
+  last_fit(split, metrics = metric_set(f_meas))
+```
+
+Using the best hyperparameters, the model is finalised and used for prediction on the unlabelled data. My submission received a score of 0.80447 which is pretty good going.
+
+```{r, warning = F, message = F}
+prediction_data <- test_data %>%
+  mutate(contains_fullstop = as.numeric(ifelse(str_detect(text, "\\."),
+                                           1,
+                                           0)),
+         contains_link = as.numeric(ifelse(str_detect(text, "http"),
+                                1,
+                                0)),
+         text = gsub(" ?(f|ht)tp(s?)://(.*)", "\ http", text),
+         contains_exclamation = as.numeric(ifelse(str_detect(text, "!"),
+                                       1,
+                                       0)),
+         contains_question = as.numeric(ifelse(str_detect(text, "\\?"),
+                                    1,
+                                    0)),
+         contains_hashtag = as.numeric(ifelse(str_detect(text, "\\#"),
+                                   1,
+                                   0)),
+         contains_number = as.numeric(ifelse(str_detect(text, "\\d"),
+                                  1,
+                                  0)),
+         text = gsub("\\d", "", text),
+         contains_at = as.numeric(ifelse(str_detect(text, "\\@"),
+                                     1,
+                                     0)),
+         contains_swear = as.numeric(ifelse(str_detect(text, swear_words),
+                                     1,
+                                     0)),
+         number_hash = str_count(text, "\\#"),
+         number_at = str_count(text, "\\@"),
+         number_link = str_count(text, "http"),
+         location_comma = as.numeric(ifelse(str_detect(location, "\\,"),
+                                        1,
+                                        0)),
+         location_comma = replace_na(location_comma, 0),
+         location_hash = as.numeric(ifelse(str_detect(location, "\\#"),
+                                        1,
+                                        0)),
+         location_hash = replace_na(location_hash, 0),
+         length = str_count(text, " ") + 1,
+         length_location = nchar(location),
+         length_location = replace_na(length_location, 0.0001)) %>%
+  dplyr::select(id, location, keyword, text, contains_fullstop, contains_link, contains_exclamation, contains_question,
+         contains_hashtag, contains_number, contains_at, contains_swear,
+         number_hash, number_at, number_link, location_comma, 
+         location_hash, length, length_location)
+```
+
+```{r, warning = F, message = F}
+final_fitted <- extract_workflow(final_wf)
+
+predictions <- predict(final_fitted, prediction_data)
+```
+
+The below table shows the first 100 predictions. Looking at the text data, I can see that the predictions are relatively accurate, but the model does fail in some cases.
+
+```{r, warning = F, message = F}
+look = test_data %>%
+  rowid_to_column() %>%
+  left_join(predictions %>% rowid_to_column()) 
+
+DT::datatable(head(look, 100),
+              options = list(pageLength = 5,
+                             autoWidth = T))
+```
+
+```{r, echo = F, eval = F, warning = F, message = F}
+submission_file <- predictions
+submission_file$id <- prediction_data$id
+submission_file <- submission_file %>%
+  dplyr::select(id, .pred_class)
+names(submission_file) <- c("id", "target")
+
+write.csv(submission_file, "submission_file_2.csv", row.names = F)
+```
+
