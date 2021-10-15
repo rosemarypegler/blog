@@ -7,31 +7,40 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Sat, 25 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://rosepegler.netlify.app/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 15 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://rosepegler.netlify.app/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>ggplot</title>
-      <link>https://rosepegler.netlify.app/tags/ggplot/</link>
-      <pubDate>Sat, 25 Sep 2021 00:00:00 +0000</pubDate>
+      <title>machine learning</title>
+      <link>https://rosepegler.netlify.app/tags/machine-learning/</link>
+      <pubDate>Fri, 15 Oct 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://rosepegler.netlify.app/tags/ggplot/</guid>
+      <guid>https://rosepegler.netlify.app/tags/machine-learning/</guid>
       <description></description>
     </item>
     
     <item>
       <title>R</title>
       <link>https://rosepegler.netlify.app/tags/r/</link>
-      <pubDate>Sat, 25 Sep 2021 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 15 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://rosepegler.netlify.app/tags/r/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>machine learning</title>
-      <link>https://rosepegler.netlify.app/tags/machine-learning/</link>
-      <pubDate>Tue, 22 Jun 2021 00:00:00 +0000</pubDate>
+      <title>xgboost</title>
+      <link>https://rosepegler.netlify.app/tags/xgboost/</link>
+      <pubDate>Fri, 15 Oct 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://rosepegler.netlify.app/tags/machine-learning/</guid>
+      <guid>https://rosepegler.netlify.app/tags/xgboost/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ggplot</title>
+      <link>https://rosepegler.netlify.app/tags/ggplot/</link>
+      <pubDate>Sat, 25 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://rosepegler.netlify.app/tags/ggplot/</guid>
       <description></description>
     </item>
     

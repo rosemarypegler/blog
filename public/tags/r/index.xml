@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Sat, 25 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://rosepegler.netlify.app/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 15 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://rosepegler.netlify.app/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Predicting Disaster-Related Tweets</title>
+      <link>https://rosepegler.netlify.app/posts/2021/10/predicting-disaster-related-tweets/</link>
+      <pubDate>Fri, 15 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://rosepegler.netlify.app/posts/2021/10/predicting-disaster-related-tweets/</guid>
+      <description>Introduction + DataThis notebook has been produced as part of my first Kaggle competition. We are provided with a dataset containing around 7,000 tweets which may or may not relate to a real disaster that has occurred. There are only two other variables; keyword which contains a disaster-related keyword (or NA) and location which details the provided location of the tweet (also can be NA).</description>
+    </item>
+    
     <item>
       <title>Visualising London&#39;s Airbnb Data</title>
       <link>https://rosepegler.netlify.app/posts/2021/09/visualising-londons-airbnb-data/</link>
