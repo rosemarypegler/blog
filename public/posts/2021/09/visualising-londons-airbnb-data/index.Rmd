@@ -13,6 +13,19 @@ toc: no
 images: ~
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(spacyr)
+library(tmaptools)
+library(ggrepel)
+library(sf)
+library(tidytext)
+library(tm)
+library(tidylo)
+theme_set(theme_minimal())
+```
+
 ## AirBnB Data
 
 One of my favourite tasks when starting a new project is to perform exploratory data analysis. It gives me the opportunity to learn about the different variables before delving into the more 'sciencey' tasks.
@@ -140,6 +153,21 @@ boroughs_listing_count %>%
                        NAME),
          NAME = ifelse(NAME == "Hammersmith and Fulham",
                        "H & F",
+                       NAME),
+         NAME = ifelse(NAME == "Tower Hamlets",
+                       "Tower \nHamlets",
+                       NAME),
+         NAME = ifelse(NAME == "Barking and Dagenham",
+                       "Barking and \nDagenham",
+                       NAME),
+         NAME = ifelse(NAME == "Waltham Forest",
+                       "Waltham \nForest",
+                       NAME),
+         NAME = ifelse(NAME == "Richmond upon Thames",
+                       "Richmond \nupon Thames",
+                       NAME),
+         NAME = ifelse(NAME == "Kingston upon Thames",
+                       "Kingston \nupon Thames",
                        NAME)) %>%
   ggplot(aes(fill = n)) +
   geom_sf(color = "white") +
@@ -158,8 +186,7 @@ boroughs_listing_count %>%
         panel.background = element_blank()) +
   geom_sf_text(aes(label = NAME),
                color = "black",
-               size = 2.8,
-               nudge_y = 100)
+               size = 2.3)
 
 ```
 
