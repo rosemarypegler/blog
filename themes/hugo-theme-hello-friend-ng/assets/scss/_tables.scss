@@ -10,10 +10,6 @@
     td {
       padding: 12px 15px;
       border: 1px solid $light-table-color;
-
-      @media (prefers-color-scheme: dark) {
-        border: 1px solid $dark-table-color;
-      }
     }
 
     thead {
@@ -21,21 +17,12 @@
         background-color: $light-table-color;
         color: $light-color;
         text-align: left;
-
-        @media (prefers-color-scheme: dark) {
-          background-color: $dark-table-color;
-          color: $dark-color;
-        }
       }
     }
 
     tbody {
       tr {
         border: 1px solid $light-table-color;
-        
-        @media (prefers-color-scheme: dark) {
-          border: 1px solid $dark-table-color;
-        }
       }
     }
   }

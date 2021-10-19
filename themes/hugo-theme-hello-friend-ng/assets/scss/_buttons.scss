@@ -23,21 +23,11 @@ a.button {
   cursor: pointer;
   outline: none;
 
-  @media (prefers-color-scheme: dark) {
-    background: $dark-background-secondary;
-    color: inherit;
-  }
-
   &.outline {
     background: transparent;
     border-color: $light-background-secondary;
     box-shadow: none;
     padding: 8px 18px;
-
-    @media (prefers-color-scheme: dark) {
-      border-color: $dark-background-secondary;
-      color: inherit;
-    }
 
     :hover {
       transform: none;
@@ -88,10 +78,5 @@ a.button {
     appearance: none;
     cursor: pointer;
     outline: none;
-
-    @media (prefers-color-scheme: dark) {
-      background: $dark-background-secondary;
-      color: inherit;
-    }
   }
 }

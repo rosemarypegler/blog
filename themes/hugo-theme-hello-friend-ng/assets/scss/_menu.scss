@@ -2,10 +2,6 @@
   background: $light-background-header;
   z-index: 9999;
 
-  @media (prefers-color-scheme: dark) {
-    background: $dark-background-header;
-  }
-
   @media #{$media-size-phone} {
     position: absolute;
     top: 50px;

@@ -117,11 +117,6 @@
       text-decoration: none;
       letter-spacing: 0.1em;
       z-index: 1;
-
-      @media (prefers-color-scheme: dark) {
-        background: $dark-background;
-        color: $dark-color-secondary;
-      }
     }
 
     hr {
@@ -159,10 +154,6 @@
   padding: 0;
   cursor: pointer;
   appearance: none;
-
-  @media (prefers-color-scheme: dark) {
-    background: $dark-background-secondary;
-  }
 
   + .button {
     margin-left: 10px;

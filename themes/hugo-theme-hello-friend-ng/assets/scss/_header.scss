@@ -6,10 +6,6 @@
   position: relative;
   padding: 20px;
 
-  @media (prefers-color-scheme: dark) {
-    background: $dark-background-header;
-  }
-
   &__right {
     display: flex;
     flex-direction: row;
