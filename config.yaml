@@ -90,3 +90,5 @@ markup:
   goldmark:
     renderer:
       unsafe: true
+
+googleAnalytics: G-8KH5C1723L
